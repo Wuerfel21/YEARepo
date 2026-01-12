@@ -13,6 +13,7 @@ $imported["YEA-DebugExtension"] = true
 #==============================================================================
 # ▼ Updates
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# 2026.01.12 - Optimized Teleport menu generation
 # 2015.09.01 - Delayed the generation of the windows until they are needed.
 # 2012.01.05 - Script no longer conflicts with conditional Key presses.
 # 2012.01.04 - Started Script and Finished.
@@ -923,7 +924,6 @@ class Window_DebugTeleport < Window_Command
   #--------------------------------------------------------------------------
   def initialize
     super(0, 0)
-    @map_info = load_data("Data/MapInfos.rvdata2")
     deactivate
     refresh
     hide
@@ -943,9 +943,7 @@ class Window_DebugTeleport < Window_Command
   # make_command_list
   #--------------------------------------------------------------------------
   def make_command_list
-    for i in 1..999
-      filename = sprintf("Data/Map%03d.rvdata2", i)
-      next unless FileTest.exist?(filename)
+    $data_mapinfos.each_pair do |i,map|
       add_command(sprintf("MAP:%03d", i), :map, true, i)
     end
   end
@@ -1147,7 +1145,6 @@ class Window_DebugMapHeader < Window_Base
     @teleport_window = teleport_window
     @map_window = map_window
     super(160, 0, Graphics.width - 160, fitting_height(2))
-    @map_info = load_data("Data/MapInfos.rvdata2")
     @map_id = 0
     @map_x = 0
     @map_y = 0
@@ -1204,8 +1201,8 @@ class Window_DebugMapHeader < Window_Base
   # draw_map_name
   #--------------------------------------------------------------------------
   def draw_map_name
-    return if @map_info[@map_id].nil?
-    draw_text(4, 0, contents.width-8, line_height, @map_info[@map_id].name, 1)
+    return if $data_mapinfos[@map_id].nil?
+    draw_text(4, 0, contents.width-8, line_height, $data_mapinfos[@map_id].name, 1)
   end
   
   #--------------------------------------------------------------------------
