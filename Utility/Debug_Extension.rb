@@ -943,7 +943,8 @@ class Window_DebugTeleport < Window_Command
   # make_command_list
   #--------------------------------------------------------------------------
   def make_command_list
-    $data_mapinfos.each_pair do |i,map|
+    # (Note that mapinfos can become unsorted...)
+    $data_mapinfos.sort.each do |i,map|
       add_command(sprintf("MAP:%03d", i), :map, true, i)
     end
   end
